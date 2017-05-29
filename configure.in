@@ -1,0 +1,57 @@
+dnl Process this file with autoconf to produce a configure script.
+
+dnl a source file from your sub dir
+AC_INIT(src/qvfb.cpp)
+
+dnl This is so we can use kde-common
+dnl AC_CONFIG_AUX_DIR(admin)
+
+AC_CANONICAL_SYSTEM 
+
+dnl Automake doc recommends to do this only here. (Janos)
+AM_INIT_AUTOMAKE(qvfb2, 2.0)
+
+AC_PREFIX_DEFAULT(/usr/local)
+if test "x$prefix" = "xNONE"; then
+  prefix=$ac_default_prefix
+  ac_configure_args="$ac_configure_args --prefix $prefix"
+fi
+
+dnl generate the config header
+AM_CONFIG_HEADER(qvfbconfig.h) dnl at the distribution this done
+
+dnl Checks for programs.
+AC_CHECK_COMPILERS
+
+dnl AC_ENABLE_SHARED(yes)
+dnl AC_ENABLE_STATIC(no)
+dnl AC_PROG_LIBTOOL
+
+all_libraries="$all_libraries $USER_LDFLAGS"
+all_includes="$all_includes $USER_INCLUDES"
+AC_SUBST(all_includes)
+AC_SUBST(all_libraries)
+
+AC_PATH_QT
+
+dnl PACKAGE set before
+
+show_menubar="yes"
+AC_ARG_ENABLE(menubar,
+[ --enable-menubar   enable the menubar of qvfb <default=yes>],
+show_menubar=$enableval)
+
+if test "x$show_menubar" = "xyes"; then
+	AC_DEFINE(_ENABLE_MENUBAR, 1, 
+		[Define if enable menubar])
+fi
+
+
+dnl add here all your Makefiles. This are created by configure
+AC_OUTPUT(
+Makefile 
+m4/Makefile
+src/Makefile
+)
+
+dnl admin/Makefile
